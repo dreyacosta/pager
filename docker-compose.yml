@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  pager:
+    image: pager
+    build: .
+    volumes:
+      - npm_cache:/root/.npm
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+    env_file: .env
+    environment:
+      - APP_ENV=test
+    tty: true
+
+volumes:
+  npm_cache:

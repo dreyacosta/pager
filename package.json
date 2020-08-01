@@ -1,0 +1,19 @@
+{
+  "name": "pager",
+  "version": "1.0.0",
+  "description": "Pager",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^7.6.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "jest": "^26.2.2"
+  },
+  "scripts": {
+    "test": "APP_ENV=test jest",
+    "lint": "eslint ."
+  },
+  "author": "David Rey <david.rey.acosta@gmail.com>",
+  "license": "MIT"
+}
