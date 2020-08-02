@@ -7,7 +7,23 @@ class AlertDTO {
     this.id = alertId;
     this.serviceId = serviceId;
     this.message = alertMessage;
-    this.ocurredOn = alertOccuredOn;
+    this.occurredOn = alertOccuredOn;
+  }
+
+  getId() {
+    return this.id;
+  }
+
+  getServiceId() {
+    return this.serviceId;
+  }
+
+  getMessage() {
+    return this.message;
+  }
+
+  getOccurredOn() {
+    return this.occurredOn;
   }
 }
 

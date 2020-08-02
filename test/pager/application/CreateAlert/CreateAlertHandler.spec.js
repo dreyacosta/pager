@@ -25,7 +25,9 @@ describe('CreateAlertHandler', () => {
           alertOcurredOn: Date.now(),
         });
 
-        const createAlert = new CreateAlert();
+        const createAlert = new CreateAlert({
+          monitoredServiceRepository,
+        });
         const handler = new CreateAlertHandler({
           createAlert,
         });
