@@ -12,5 +12,7 @@ module.exports = {
     ecmaVersion: 11,
   },
   rules: {
+    'object-curly-newline': 0,
+    'class-methods-use-this': 0,
   },
 };
