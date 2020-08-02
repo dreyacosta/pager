@@ -18,6 +18,10 @@ class Alert {
   getServiceId() {
     return this.serviceId;
   }
+
+  getOccurredOn() {
+    return this.occurredOn;
+  }
 }
 
 module.exports = Alert;

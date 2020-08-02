@@ -14,15 +14,43 @@ const Notification = require('../../../../src/pager/domain/Notification');
 describe('CreateAlertHandler', () => {
   describe('given a monitored service in a healthy state', () => {
     const serviceId = 3;
+    const escalationPolicyId = 8;
     const monitoredServiceRepository = new MonitoredServiceInMemoryRepository();
+    const escalationPolicyRepository = new EscalationPolicyInMemoryRepository();
+    const notificationRepository = new NotificationInMemoryRepository();
+
+    const targetOne = new EscalationPolicyTarget({
+      targetId: 1,
+      targetType: EscalationPolicyTarget.TYPE.EMAIL,
+      targetDestination: 'mike@company.com',
+    });
+    const targetTwo = new EscalationPolicyTarget({
+      targetId: 2,
+      targetType: EscalationPolicyTarget.TYPE.SMS,
+      targetDestination: '+12025550102',
+    });
+    const escalationPolicy = new EscalationPolicy({
+      escalationPolicyId,
+      escalationPolicyLevels: [
+        new EscalationPolicyLevel({
+          escalationPolicyLevelTargets: [
+            targetOne,
+            targetTwo,
+          ],
+        }),
+      ],
+    });
+
     const alertDTO = AlertDTO.create({
       alertId: 12,
       serviceId,
       alertMessage: 'Network error',
-      alertOcurredOn: Date.now(),
+      alertOccurredOn: Date.now(),
     });
     const createAlert = new CreateAlert({
       monitoredServiceRepository,
+      escalationPolicyRepository,
+      notificationRepository,
     });
     const handler = new CreateAlertHandler({
       createAlert,
@@ -31,8 +59,10 @@ describe('CreateAlertHandler', () => {
     beforeEach(async () => {
       const monitoredService = new MonitoredService({
         serviceId,
+        escalationPolicyId,
       });
       await monitoredServiceRepository.save({ monitoredService });
+      await escalationPolicyRepository.save({ escalationPolicy });
     });
 
     describe('when CreateAlertHandler receives new alert related to the service', () => {
@@ -44,32 +74,6 @@ describe('CreateAlertHandler', () => {
       });
 
       it('then creates notifications for the first level of the escalation policy', async () => {
-        const escalationPolicyRepository = new EscalationPolicyInMemoryRepository();
-        const notificationRepository = new NotificationInMemoryRepository();
-
-        const targetOne = new EscalationPolicyTarget({
-          targetId: 1,
-          targetType: EscalationPolicyTarget.TYPE.EMAIL,
-          targetDestination: 'mike@company.com',
-        });
-        const targetTwo = new EscalationPolicyTarget({
-          targetId: 2,
-          targetType: EscalationPolicyTarget.TYPE.SMS,
-          targetDestination: '+12025550102',
-        });
-        const escalationPolicy = new EscalationPolicy({
-          escalationPolicyId: 8,
-          levels: [
-            new EscalationPolicyLevel({
-              targets: [
-                targetOne,
-                targetTwo,
-              ],
-            }),
-          ],
-        });
-        await escalationPolicyRepository.save({ escalationPolicy });
-
         await handler.execute({ alertDTO });
 
         const alert = Alert.fromDTO({ alertDTO });

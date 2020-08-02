@@ -1,6 +1,7 @@
 class MonitoredService {
-  constructor({ serviceId, status }) {
+  constructor({ serviceId, escalationPolicyId, status }) {
     this.id = serviceId;
+    this.escalationPolicyId = escalationPolicyId;
     this.status = status || MonitoredService.STATUS.HEALTHY;
   }
 
@@ -10,6 +11,10 @@ class MonitoredService {
 
   getId() {
     return this.id;
+  }
+
+  getEscalationPolicyId() {
+    return this.escalationPolicyId;
   }
 
   getStatus() {

@@ -4,6 +4,10 @@ class Notification {
     this.target = notificationTarget;
     this.alert = notificationAlert;
   }
+
+  getId() {
+    return this.id;
+  }
 }
 
 module.exports = Notification;

@@ -8,7 +8,12 @@ class EscalationPolicyInMemoryRepository extends EscalationPolicyRepository {
   }
 
   async save({ escalationPolicy }) {
-    this.data[escalationPolicy.getId] = escalationPolicy;
+    this.data[escalationPolicy.getId()] = escalationPolicy;
+  }
+
+  async findById({ escalationPolicyId }) {
+    const escalationPolicy = this.data[escalationPolicyId];
+    return escalationPolicy;
   }
 }
 

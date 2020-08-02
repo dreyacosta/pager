@@ -1,13 +1,13 @@
 class AlertDTO {
-  static create({ alertId, serviceId, alertMessage, alertOccuredOn }) {
-    return new AlertDTO({ alertId, serviceId, alertMessage, alertOccuredOn });
+  static create({ alertId, serviceId, alertMessage, alertOccurredOn }) {
+    return new AlertDTO({ alertId, serviceId, alertMessage, alertOccurredOn });
   }
 
-  constructor({ alertId, serviceId, alertMessage, alertOccuredOn }) {
+  constructor({ alertId, serviceId, alertMessage, alertOccurredOn }) {
     this.id = alertId;
     this.serviceId = serviceId;
     this.message = alertMessage;
-    this.occurredOn = alertOccuredOn;
+    this.occurredOn = alertOccurredOn;
   }
 
   getId() {
