@@ -19,6 +19,6 @@ class NotificationAckTimeout {
   }
 }
 
-NotificationAckTimeout.TIMEOUT = 30;
+NotificationAckTimeout.TIMEOUT = 15;
 
 module.exports = NotificationAckTimeout;
