@@ -65,11 +65,13 @@ describe('CreateAlertHandler', () => {
     });
 
     describe('when CreateAlertHandler receives new alert related to the service', () => {
-      it('then the monitored service becomes unhealthy', async () => {
+      it('then the monitored service becomes unhealthy and set alert', async () => {
         await handler.execute({ alertDTO });
 
         const monitoredServiceUpdated = await monitoredServiceRepository.findById({ serviceId });
+        const alert = monitoredServiceUpdated.getAlert();
         expect(monitoredServiceUpdated.getStatus()).toEqual(MonitoredService.STATUS.UNHEALTHY);
+        expect(alert.getEscalationLevel()).toEqual(1);
       });
 
       it('then creates notifications for the first level of the escalation policy', async () => {

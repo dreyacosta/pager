@@ -9,7 +9,7 @@ class EscalationPolicy {
   }
 
   getTargetsOfLevel(levelNumber) {
-    const level = this.levels[levelNumber - 1];
+    const level = this.levels[levelNumber];
     if (!level) {
       return [];
     }

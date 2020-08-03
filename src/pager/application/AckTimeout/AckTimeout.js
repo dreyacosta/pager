@@ -16,7 +16,7 @@ class AckTimeout {
     const alert = monitoredService.getAlert();
     const currentEscalationLevel = alert.getEscalationLevel();
 
-    const targets = escalationPolicy.getTargetsOfLevel(currentEscalationLevel + 1);
+    const targets = escalationPolicy.getTargetsOfLevel(currentEscalationLevel);
     if (targets.length === 0) {
       return;
     }

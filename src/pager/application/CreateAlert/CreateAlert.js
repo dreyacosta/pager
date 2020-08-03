@@ -12,16 +12,20 @@ class CreateAlert {
     const monitoredService = await this.monitoredServiceRepository.findById({ serviceId });
 
     monitoredService.unhealthy();
+    monitoredService.setAlert({ alert });
 
     const escalationPolicyId = monitoredService.getEscalationPolicyId();
     const escalationPolicy = await this.escalationPolicyRepository.findById({ escalationPolicyId });
 
-    const targets = escalationPolicy.getTargetsOfLevel(1);
+    const targets = escalationPolicy.getTargetsOfLevel(alert.getEscalationLevel());
     const notifications = targets.map((target) => new Notification({
       notificationId: `${target.getId()}_${alert.getOccurredOn()}`,
       notificationTarget: target,
       notificationAlert: alert,
     }));
+
+    const newAlert = alert.nextEscalationLevelAlert();
+    monitoredService.setAlert({ alert: newAlert });
 
     await this.notificationRepository.saveAll({ notifications });
     await this.monitoredServiceRepository.save({ monitoredService });

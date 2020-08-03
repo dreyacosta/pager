@@ -15,7 +15,7 @@ class Alert {
     alertOccurredOn,
   }) {
     this.serviceId = serviceId;
-    this.escalationLevel = alertEscalationLevel || 1;
+    this.escalationLevel = alertEscalationLevel || 0;
     this.ack = alertAck || false;
     this.message = alertMessage;
     this.occurredOn = alertOccurredOn;
