@@ -1,8 +1,13 @@
 class MonitoredService {
-  constructor({ serviceId, escalationPolicyId, status }) {
+  constructor({ serviceId, escalationPolicyId, monitoredServiceAlert, status }) {
     this.id = serviceId;
     this.escalationPolicyId = escalationPolicyId;
     this.status = status || MonitoredService.STATUS.HEALTHY;
+    this.alert = monitoredServiceAlert;
+  }
+
+  setAlert({ alert }) {
+    this.alert = alert;
   }
 
   unhealthy() {
@@ -19,6 +24,10 @@ class MonitoredService {
 
   getStatus() {
     return this.status;
+  }
+
+  getAlert() {
+    return this.alert;
   }
 }
 

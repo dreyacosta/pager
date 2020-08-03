@@ -11,7 +11,7 @@
     "jest": "^26.2.2"
   },
   "scripts": {
-    "test": "APP_ENV=test jest",
+    "test": "APP_ENV=test jest --verbose",
     "lint": "eslint ."
   },
   "author": "David Rey <david.rey.acosta@gmail.com>",

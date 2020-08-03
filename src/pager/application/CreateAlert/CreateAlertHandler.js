@@ -7,7 +7,6 @@ class CreateAlertHandler {
 
   async execute({ alertDTO }) {
     const alert = new Alert({
-      alertId: alertDTO.getId(),
       serviceId: alertDTO.getServiceId(),
       alertMessage: alertDTO.getMessage(),
       alertOccurredOn: alertDTO.getOccurredOn(),

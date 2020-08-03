@@ -42,7 +42,6 @@ describe('CreateAlertHandler', () => {
     });
 
     const alertDTO = AlertDTO.create({
-      alertId: 12,
       serviceId,
       alertMessage: 'Network error',
       alertOccurredOn: Date.now(),

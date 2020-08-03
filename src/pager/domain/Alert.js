@@ -1,18 +1,33 @@
 class Alert {
   static fromDTO({ alertDTO }) {
     return new Alert({
-      alertId: alertDTO.getId(),
       serviceId: alertDTO.getServiceId(),
       alertMessage: alertDTO.getMessage(),
       alertOccurredOn: alertDTO.getOccurredOn(),
     });
   }
 
-  constructor({ alertId, serviceId, alertMessage, alertOccurredOn }) {
-    this.id = alertId;
+  constructor({
+    serviceId,
+    alertEscalationLevel,
+    alertAck,
+    alertMessage,
+    alertOccurredOn,
+  }) {
     this.serviceId = serviceId;
+    this.escalationLevel = alertEscalationLevel || 1;
+    this.ack = alertAck || false;
     this.message = alertMessage;
     this.occurredOn = alertOccurredOn;
+  }
+
+  nextEscalationLevelAlert() {
+    return new Alert({
+      serviceId: this.serviceId,
+      alertEscalationLevel: this.escalationLevel + 1,
+      alertMessage: this.message,
+      alertOccurredOn: this.occurredOn,
+    });
   }
 
   getServiceId() {
@@ -25,6 +40,10 @@ class Alert {
 
   getMessage() {
     return this.message;
+  }
+
+  getEscalationLevel() {
+    return this.escalationLevel;
   }
 }
 

@@ -23,7 +23,6 @@ describe('SendNotificationsHandler', () => {
       targetDestination: '+12025550102',
     });
     const alert = new Alert({
-      alertId: 12,
       serviceId: 1,
       alertMessage: 'Network error',
       alertOccurredOn: Date.now(),
