@@ -18,6 +18,10 @@ class MonitoredService {
     this.status = MonitoredService.STATUS.UNHEALTHY;
   }
 
+  isUnhealthy() {
+    return this.status === MonitoredService.STATUS.UNHEALTHY;
+  }
+
   getId() {
     return this.id;
   }

@@ -10,12 +10,18 @@ class CreateAlert {
   async execute({ alert }) {
     const serviceId = alert.getServiceId();
     const monitoredService = await this.monitoredServiceRepository.findById({ serviceId });
+    if (monitoredService.isUnhealthy()) {
+      return;
+    }
 
     monitoredService.unhealthy();
     monitoredService.setAlert({ alert });
 
     const escalationPolicyId = monitoredService.getEscalationPolicyId();
     const escalationPolicy = await this.escalationPolicyRepository.findById({ escalationPolicyId });
+    if (!escalationPolicy) {
+      return;
+    }
 
     const targets = escalationPolicy.getTargetsOfLevel(alert.getEscalationLevel());
     const notifications = targets.map((target) => new Notification({
