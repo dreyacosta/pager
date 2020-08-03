@@ -49,7 +49,7 @@ describe('AckTimeoutHandler', () => {
       await escalationPolicyRepository.save({ escalationPolicy });
 
       serviceId = 32;
-      monitoredServiceAlert = anAlert({ serviceId });
+      monitoredServiceAlert = anAlert({ serviceId, alertEscalationLevel: 1 });
       const monitoredService = new MonitoredService({
         serviceId,
         escalationPolicyId,
@@ -99,11 +99,68 @@ describe('AckTimeoutHandler', () => {
     });
   });
 
-  function anAlert({ serviceId }) {
+  describe('given a healthy monitored service', () => {
+    let monitoredServiceRepository;
+    let notificationRepository;
+    let serviceId;
+    let monitoredServiceAlert;
+    let handler;
+
+    beforeEach(async () => {
+      monitoredServiceRepository = new MonitoredServiceInMemoryRepository();
+      const escalationPolicyRepository = new EscalationPolicyInMemoryRepository();
+      notificationRepository = new NotificationInMemoryRepository();
+
+      handler = createAckTimeoutHandler({
+        monitoredServiceRepository,
+        escalationPolicyRepository,
+        notificationRepository,
+      });
+
+      const escalationPolicyId = 3;
+      const escalationPolicy = new EscalationPolicy({
+        escalationPolicyId,
+        escalationPolicyLevels: [
+          anEscalationPolicyLevelWithTarget({
+            target: anEmailEscalationPolicyTarget(),
+          }),
+        ],
+      });
+      await escalationPolicyRepository.save({ escalationPolicy });
+
+      serviceId = 32;
+      monitoredServiceAlert = anAlert({ serviceId, alertEscalationLevel: 0 });
+      const monitoredService = new MonitoredService({
+        serviceId,
+        escalationPolicyId,
+        monitoredServiceAlert,
+        status: MonitoredService.STATUS.HEALTHY,
+      });
+      await monitoredServiceRepository.save({ monitoredService });
+    });
+
+    describe('when receives ack timeout for that service', () => {
+      it('then ignores the timeout', async () => {
+        const ackTimeoutDTO = AckTimeoutDTO.create({
+          ackTimeoutServiceId: serviceId,
+        });
+
+        await handler.execute({ ackTimeoutDTO });
+
+        const monitoredServiceUpdated = await monitoredServiceRepository.findById({ serviceId });
+        const notifications = await notificationRepository.findAll();
+        expect(monitoredServiceUpdated.getStatus()).toEqual(MonitoredService.STATUS.HEALTHY);
+        expect(monitoredServiceUpdated.getAlert()).toEqual(monitoredServiceAlert);
+        expect(notifications).toEqual([]);
+      });
+    });
+  });
+
+  function anAlert({ serviceId, alertEscalationLevel }) {
     return new Alert({
       serviceId,
       alertAck: false,
-      alertEscalationLevel: 1,
+      alertEscalationLevel,
       alertMessage: 'Service down',
       alertOccurredOn: Date.now(),
     });
