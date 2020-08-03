@@ -103,6 +103,7 @@ describe('AckTimeoutHandler', () => {
     let monitoredServiceRepository;
     let notificationRepository;
     let serviceId;
+    let escalationPolicyId;
     let monitoredServiceAlert;
     let handler;
 
@@ -117,7 +118,7 @@ describe('AckTimeoutHandler', () => {
         notificationRepository,
       });
 
-      const escalationPolicyId = 3;
+      escalationPolicyId = 3;
       const escalationPolicy = new EscalationPolicy({
         escalationPolicyId,
         escalationPolicyLevels: [
@@ -152,6 +153,43 @@ describe('AckTimeoutHandler', () => {
         expect(monitoredServiceUpdated.getStatus()).toEqual(MonitoredService.STATUS.HEALTHY);
         expect(monitoredServiceUpdated.getAlert()).toEqual(monitoredServiceAlert);
         expect(notifications).toEqual([]);
+      });
+    });
+
+    describe('and an acked alert', () => {
+      let ackAlert;
+
+      beforeEach(async () => {
+        ackAlert = new Alert({
+          serviceId,
+          alertAck: true,
+          alertEscalationLevel: 0,
+          alertMessage: 'Service down',
+          alertOccurredOn: Date.now(),
+        });
+        const monitoredService = new MonitoredService({
+          serviceId,
+          escalationPolicyId,
+          monitoredServiceAlert: ackAlert,
+          status: MonitoredService.STATUS.UNHEALTHY,
+        });
+        await monitoredServiceRepository.save({ monitoredService });
+      });
+
+      describe('when receives ack timeout for that service', () => {
+        it('then ignores the timeout', async () => {
+          const ackTimeoutDTO = AckTimeoutDTO.create({
+            ackTimeoutServiceId: serviceId,
+          });
+
+          await handler.execute({ ackTimeoutDTO });
+
+          const monitoredServiceUpdated = await monitoredServiceRepository.findById({ serviceId });
+          const notifications = await notificationRepository.findAll();
+          expect(monitoredServiceUpdated.getStatus()).toEqual(MonitoredService.STATUS.UNHEALTHY);
+          expect(monitoredServiceUpdated.getAlert()).toEqual(ackAlert);
+          expect(notifications).toEqual([]);
+        });
       });
     });
   });

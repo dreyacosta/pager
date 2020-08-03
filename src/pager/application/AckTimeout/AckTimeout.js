@@ -9,7 +9,8 @@ class AckTimeout {
 
   async execute({ serviceId }) {
     const monitoredService = await this.monitoredServiceRepository.findById({ serviceId });
-    if (monitoredService.isHealthy()) {
+    const alert = monitoredService.getAlert();
+    if (monitoredService.isHealthy() || alert.isAck()) {
       return;
     }
 
@@ -19,10 +20,7 @@ class AckTimeout {
       return;
     }
 
-    const alert = monitoredService.getAlert();
-    const currentEscalationLevel = alert.getEscalationLevel();
-
-    const targets = escalationPolicy.getTargetsOfLevel(currentEscalationLevel);
+    const targets = escalationPolicy.getTargetsOfLevel(alert.getEscalationLevel());
     if (targets.length === 0) {
       return;
     }

@@ -40,6 +40,10 @@ class Alert {
     });
   }
 
+  isAck() {
+    return this.ack;
+  }
+
   getServiceId() {
     return this.serviceId;
   }
