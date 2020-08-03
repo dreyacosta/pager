@@ -22,6 +22,10 @@ class Alert {
   getOccurredOn() {
     return this.occurredOn;
   }
+
+  getMessage() {
+    return this.message;
+  }
 }
 
 module.exports = Alert;
