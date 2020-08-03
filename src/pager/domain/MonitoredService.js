@@ -10,6 +10,10 @@ class MonitoredService {
     this.alert = alert;
   }
 
+  healthy() {
+    this.status = MonitoredService.STATUS.HEALTHY;
+  }
+
   unhealthy() {
     this.status = MonitoredService.STATUS.UNHEALTHY;
   }
