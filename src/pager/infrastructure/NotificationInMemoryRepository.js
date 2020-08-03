@@ -30,6 +30,15 @@ class NotificationInMemoryRepository extends NotificationRepository {
     });
   }
 
+  async deleteByServiceId({ serviceId }) {
+    Object.entries(this.data).forEach(([, notification]) => {
+      const alert = notification.getAlert();
+      if (alert.getServiceId() === serviceId) {
+        delete this.data[notification.getId()];
+      }
+    });
+  }
+
   async drop() {
     this.data = {};
   }

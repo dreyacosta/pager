@@ -30,6 +30,16 @@ class Alert {
     });
   }
 
+  ackAlert() {
+    return new Alert({
+      serviceId: this.serviceId,
+      alertEscalationLevel: this.escalationLevel,
+      alertAck: true,
+      alertMessage: this.message,
+      alertOccurredOn: this.occurredOn,
+    });
+  }
+
   getServiceId() {
     return this.serviceId;
   }
@@ -44,6 +54,10 @@ class Alert {
 
   getEscalationLevel() {
     return this.escalationLevel;
+  }
+
+  getAck() {
+    return this.ack;
   }
 }
 

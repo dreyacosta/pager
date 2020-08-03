@@ -34,6 +34,10 @@ class Notification {
     return this.target;
   }
 
+  getAlert() {
+    return this.alert;
+  }
+
   getTargetDestination() {
     return this.target.getDestination();
   }

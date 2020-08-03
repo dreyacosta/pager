@@ -11,6 +11,10 @@ class NotificationRepository {
     throw new Error('saveAll not implemented');
   }
 
+  async deleteByServiceId() {
+    throw new Error('deleteByServiceId not implemented');
+  }
+
   async drop() {
     throw new Error('drop not implemented');
   }
