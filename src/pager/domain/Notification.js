@@ -30,6 +30,10 @@ class Notification {
     return this.processedOn;
   }
 
+  getTarget() {
+    return this.target;
+  }
+
   getTargetDestination() {
     return this.target.getDestination();
   }

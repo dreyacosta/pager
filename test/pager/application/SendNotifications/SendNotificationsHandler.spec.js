@@ -7,6 +7,8 @@ const SendNotificationsHandler = require('../../../../src/pager/application/Send
 const NotificationSmsHttpSender = require('../../../../src/pager/infrastructure/NotificationSmsHttpSender');
 const NotificationEmailHttpSender = require('../../../../src/pager/infrastructure/NotificationEmailHttpSender');
 const NotificationEmail = require('../../../../src/pager/domain/NotificationEmail');
+const NotificationAckTimeoutHttpSetter = require('../../../../src/pager/infrastructure/NotificationAckTimeoutHttpSetter');
+const NotificationAckTimeout = require('../../../../src/pager/domain/NotificationAckTimeout');
 
 describe('SendNotificationsHandler', () => {
   describe('given a mail notification and an SMS notification for 2 different targets', () => {
@@ -31,6 +33,7 @@ describe('SendNotificationsHandler', () => {
     describe('when SendNotificacions', () => {
       let notificationEmailSender;
       let notificationSmsSender;
+      let notificationAckTimeoutSetter;
       let handler;
 
       beforeEach(async () => {
@@ -52,10 +55,12 @@ describe('SendNotificationsHandler', () => {
 
         notificationEmailSender = NotificationEmailHttpSender.createNull();
         notificationSmsSender = NotificationSmsHttpSender.createNull();
+        notificationAckTimeoutSetter = NotificationAckTimeoutHttpSetter.createNull();
         const sendNotifications = new SendNotifications({
           notificationRepository,
           notificationEmailSender,
           notificationSmsSender,
+          notificationAckTimeoutSetter,
         });
         handler = new SendNotificationsHandler({
           sendNotifications,
@@ -92,6 +97,21 @@ describe('SendNotificationsHandler', () => {
           {
             phoneNumber: targetSms.getDestination(),
             text: alert.getMessage(),
+          },
+        ]);
+      });
+
+      it('then set 15 min acknowledgement timeout for each target', async () => {
+        await handler.execute();
+
+        expect(notificationAckTimeoutSetter.httpClient.timers).toEqual([
+          {
+            targetId: targetEmail.getId(),
+            ackTimeout: NotificationAckTimeout.TIMEOUT,
+          },
+          {
+            targetId: targetSms.getId(),
+            ackTimeout: NotificationAckTimeout.TIMEOUT,
           },
         ]);
       });
