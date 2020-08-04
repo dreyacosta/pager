@@ -46,5 +46,5 @@ For this to work, I used an composed key: TargetId_AlertOccurredOn. I expect an 
 - CI with Travis or GitHub actions
 
 ### Additional comments
-- Typescript would be a better choice. Having types and clear interfaces provides clarity about what is everything in the code. I didn't use it because I'll need a few more days to be familiared with it
+- Typescript would be a better choice. Having types and clear interfaces provides clarity about the different parts of the code. I didn't use it because I'll need a few more days to be familiared with it
 - Review code consistency and simmetry. I'd like to spend a few more time reviewing the naming, that objects of the same type follow the same interface, and that tests structure is the same (setup, give, when, then)
