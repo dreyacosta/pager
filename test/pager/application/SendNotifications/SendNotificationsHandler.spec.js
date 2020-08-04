@@ -71,7 +71,7 @@ describe('SendNotificationsHandler', () => {
       });
 
       it('then notifications are marked as proccessed', async () => {
-        const timeBeforeHandler = Date.now();
+        const timeBeforeHandler = aTimeBefore();
 
         await handler.execute();
 
@@ -116,4 +116,10 @@ describe('SendNotificationsHandler', () => {
       });
     });
   });
+
+  function aTimeBefore() {
+    const now = new Date();
+    now.setHours(now.getHours() - 2);
+    return now.getTime();
+  }
 });
