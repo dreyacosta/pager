@@ -33,7 +33,7 @@ The domain is modeled in the `src` directory. The root of this directory contain
 ### Only once notification
 When you have commands (writes to DB like `MonitoredService`) as part of one transaction, you also save `Notifications` that will later be processed as part of the same transaction.
 
-As a second piece, there is single, separate process that will call `SendNotification` periodically. It will check the contents of `NotificationRepository` and process the `Notifications`. After each `Notification` has been processed, the `Notification` will be marked as processed.
+As a second piece, there is single, separate process that will call `SendNotifications` periodically. It will check the contents of `NotificationRepository` and process the `Notifications`. After each `Notification` has been processed, the `Notification` will be marked as processed.
 
 Therefore, `SendNotifications` sends email, SMS, and sets an external timer.
 
@@ -42,5 +42,9 @@ For this to work, I used an composed key: TargetId_AlertOccurredOn. I expect an 
 ### Nice to have improvements
 - Test data builders
 - Extract new class `CreateNotifications`. `CreateAlert` and `AckTimeout` have the same code for retrieving the escalation policy, getting the next level targets, and saving notifications
+- Concurrent tests. Despite the some of the concurrency problems are covered with this solution approach, it'd be nice to have some `PagerConcurrent.spec`
 - CI with Travis or GitHub actions
-- Review code consistency and simmetry
+
+### Additional comments
+- Typescript would be a better choice. Having types and clear interfaces provides clarity about what is everything in the code. I didn't use it because I'll need a few more days to be familiared with it
+- Review code consistency and simmetry. I'd like to spend a few more time reviewing the naming, that objects of the same type follow the same interface, and that tests structure is the same (setup, give, when, then)
