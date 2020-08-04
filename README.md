@@ -48,3 +48,4 @@ For this to work, I used an composed key: TargetId_AlertOccurredOn. I expect an 
 ### Additional comments
 - Typescript would be a better choice. Having types and clear interfaces provides clarity about the different parts of the code. I didn't use it because I'll need a few more days to be familiared with it
 - Review code consistency and simmetry. I'd like to spend a few more time reviewing the naming, that objects of the same type follow the same interface, and that tests structure is the same (setup, give, when, then)
+- Tests will require extra setup if dealing with real infrastructure such as opening DB connections, cleaning DB before and after tests, and closing connections after the tests. Mocks can be used instead, but if possible prefer to use an in-memory instance of the chosen DB.
